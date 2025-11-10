@@ -23,22 +23,37 @@ def load_model():
     import os
     from pathlib import Path
     
+    # Get current working directory and script directory
+    cwd = os.getcwd()
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    print(f"Current working directory: {cwd}")
+    print(f"Script directory: {script_dir}")
+    
     # Try multiple possible model paths
     possible_paths = [
         "banana_model.pt",
         "../banana_model.pt",
-        os.path.join(os.path.dirname(__file__), "banana_model.pt"),
-        os.path.join(os.path.dirname(__file__), "..", "banana_model.pt"),
+        os.path.join(script_dir, "banana_model.pt"),
+        os.path.join(script_dir, "..", "banana_model.pt"),
+        os.path.join(cwd, "banana_model.pt"),
+        os.path.join(cwd, "api", "banana_model.pt"),
     ]
     
+    print("Searching for model file in the following paths:")
     model_path = None
     for path in possible_paths:
-        if os.path.exists(path):
+        abs_path = os.path.abspath(path)
+        exists = os.path.exists(path)
+        print(f"  {path} -> {abs_path} (exists: {exists})")
+        if exists:
             model_path = path
             break
     
     if model_path is None:
-        print("Warning: banana_model.pt not found. Please train the model first.")
+        print("ERROR: banana_model.pt not found in any of the searched paths!")
+        print(f"Listing files in current directory: {os.listdir(cwd)}")
+        if os.path.exists(script_dir):
+            print(f"Listing files in script directory: {os.listdir(script_dir)}")
         return False
     
     try:

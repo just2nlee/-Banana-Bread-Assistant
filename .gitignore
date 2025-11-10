@@ -38,7 +38,7 @@ dataset/
 !tsconfig.json
 
 # Model files (too large for git)
-banana_model.pt
+# banana_model.pt - Now included in repo for Railway deployment
 training_history.json
 dataset_info.json
 

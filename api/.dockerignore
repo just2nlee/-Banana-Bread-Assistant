@@ -4,6 +4,7 @@ __pycache__/
 *.pyd
 .Python
 *.pt
+!banana_model.pt
 *.pth
 *.pkl
 .git/

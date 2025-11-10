@@ -11,6 +11,7 @@ Lib/
 Scripts/
 share/
 *.pt
+!banana_model.pt
 *.pth
 *.pkl
 *.h5

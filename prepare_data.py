@@ -37,11 +37,20 @@ def get_death_days() -> dict:
         10: 16
     }
 
-def prepare_dataset(data_dir: str = ".", output_dir: str = "dataset") -> Tuple[List[str], List[int], List[int]]:
+def prepare_dataset(data_dir: str = ".", output_dir: str = "dataset", exclude_bananas: list = None) -> Tuple[List[str], List[int], List[int]]:
     """
     Prepare dataset from banana image folders.
+    
+    Args:
+        data_dir: Directory containing banana folders
+        output_dir: Output directory (unused, kept for compatibility)
+        exclude_bananas: List of banana numbers to exclude from training (e.g., [5])
+    
     Returns: (image_paths, day_labels, death_days)
     """
+    if exclude_bananas is None:
+        exclude_bananas = []
+    
     data_path = Path(data_dir)
     image_paths = []
     day_labels = []
@@ -54,11 +63,18 @@ def prepare_dataset(data_dir: str = ".", output_dir: str = "dataset") -> Tuple[L
                             if d.is_dir() and d.name.startswith("Banana_")])
     
     print(f"Found {len(banana_folders)} banana folders")
+    if exclude_bananas:
+        print(f"Excluding bananas: {exclude_bananas}")
     
     for folder in banana_folders:
         banana_num = extract_banana_number_from_folder(folder.name)
         if banana_num is None:
             print(f"  Warning: Could not extract banana number from {folder.name}, skipping...")
+            continue
+        
+        # Skip excluded bananas
+        if banana_num in exclude_bananas:
+            print(f"  Skipping Banana {banana_num} (excluded from training)")
             continue
             
         banana_death_day = death_day_map.get(banana_num)

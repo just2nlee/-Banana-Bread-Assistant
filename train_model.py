@@ -61,11 +61,22 @@ def create_model(num_classes=1):
     
     return model
 
-def train_model(data_dir=".", epochs=50, batch_size=8, learning_rate=0.001):
-    """Train the banana ripeness prediction model."""
+def train_model(data_dir=".", epochs=50, batch_size=8, learning_rate=0.001, exclude_bananas=None):
+    """Train the banana ripeness prediction model.
+    
+    Args:
+        data_dir: Directory containing banana image folders
+        epochs: Number of training epochs
+        batch_size: Batch size for training
+        learning_rate: Learning rate for optimizer
+        exclude_bananas: List of banana numbers to exclude from training (e.g., [5])
+    """
     
     print("Preparing dataset...")
-    image_paths, day_labels, death_days = prepare_dataset(data_dir)
+    # Default to excluding banana 5 if not specified
+    if exclude_bananas is None:
+        exclude_bananas = [5]
+    image_paths, day_labels, death_days = prepare_dataset(data_dir, exclude_bananas=exclude_bananas)
     
     if len(image_paths) == 0:
         raise ValueError("No images found! Check your data directory.")
@@ -186,5 +197,6 @@ def train_model(data_dir=".", epochs=50, batch_size=8, learning_rate=0.001):
     return model
 
 if __name__ == "__main__":
-    train_model(epochs=50, batch_size=8, learning_rate=0.001)
+    # Exclude banana 5 from training
+    train_model(epochs=50, batch_size=8, learning_rate=0.001, exclude_bananas=[5])
 
